@@ -24,7 +24,7 @@ function Transcription() {
       const prevWords = fullTranscriptRef.current.trim().split(/\s+/);
       const newWords = transcript.split(/\s+/);
 
-      // Tenta detectar a quantidade de palavras repetidas no final
+      // Detecta sobreposição de palavras repetidas
       let overlap = 0;
       const maxCheck = Math.min(prevWords.length, newWords.length);
       for (let i = 1; i <= maxCheck; i++) {
@@ -57,7 +57,7 @@ function Transcription() {
 
   const handleStart = () => {
     if (recognitionRef.current && !listening) {
-      fullTranscriptRef.current = ''; // limpa antes de iniciar nova sessão
+      fullTranscriptRef.current = '';
       setCapturedText('');
       recognitionRef.current.start();
       setListening(true);
@@ -72,38 +72,60 @@ function Transcription() {
   };
 
   return (
-    <div>
-      <h3>Transcrição de Fala em Tempo Real</h3>
-      <button onClick={handleStart}>Iniciar</button>
-      <button onClick={handleStop} disabled={!listening}>Parar</button>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px', textAlign: 'center' }}>
+      <h3 style={{ color: '#1565c0' }}>Transcrição de Fala em Tempo Real</h3>
 
-      <h4>Texto capturado:</h4>
+      <div style={{ marginBottom: '15px' }}>
+        <button
+          onClick={handleStart}
+          disabled={listening}
+          style={{
+            backgroundColor: '#1976d2',
+            color: '#fff',
+            border: 'none',
+            padding: '10px 20px',
+            marginRight: '10px',
+            borderRadius: '5px',
+            cursor: 'pointer',
+          }}
+        >
+          Iniciar
+        </button>
+
+        <button
+          onClick={handleStop}
+          disabled={!listening}
+          style={{
+            backgroundColor: '#ef5350',
+            color: '#fff',
+            border: 'none',
+            padding: '10px 20px',
+            borderRadius: '5px',
+            cursor: 'pointer',
+          }}
+        >
+          Parar
+        </button>
+      </div>
+
+      <h4 style={{ color: '#0d47a1' }}>Texto capturado:</h4>
       <div
         id="conteudo-vlibras"
         style={{
-          backgroundColor: '#111',
-          color: '#fff',
-          padding: '10px',
-          border: '1px solid #ccc',
-          marginTop: '10px',
-          minHeight: '100px',
+          backgroundColor: '#e3f2fd',
+          color: '#0d47a1',
+          padding: '15px',
+          borderRadius: '8px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          marginTop: '20px',
+          minHeight: '120px',
           fontSize: '18px',
+          lineHeight: '1.5',
+          textAlign: 'left',
         }}
       >
         {capturedText}
       </div>
-
-      {/* Avatar VLibras centralizado */}
-      <div
-        id="vlibras"
-        style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%) scale(1.2)',
-          zIndex: 9999,
-        }}
-      ></div>
     </div>
   );
 }

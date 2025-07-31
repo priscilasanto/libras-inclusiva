@@ -1,6 +1,8 @@
 import React from 'react';
-import Libras from './components/Libras';
+
 import Transcription from './components/Transcription';
+import Libras from './components/Libras';
+
 
 function App() {
   return (

@@ -1,22 +1,53 @@
-/* src/App.css */
-.App {
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to right, #2193b0, #6dd5ed);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #fff;
   text-align: center;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+button {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px 24px;
+  margin: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button:first-of-type {
+  background-color: #00c9ff;
+  color: #003f5c;
+}
+
+button:last-of-type {
+  background-color: #ef476f;
   color: white;
 }
 
-h1 {
-  font-size: 4rem;
-}
-
-p {
-  font-size: 1.5rem;
+#conteudo-vlibras {
+  background: rgba(255, 255, 255, 0.9);
+  color: #003f5c;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 30px;
+  min-height: 120px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
