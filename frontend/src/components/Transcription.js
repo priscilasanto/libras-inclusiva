@@ -4,6 +4,7 @@ function Transcription() {
   const [capturedText, setCapturedText] = useState('');
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef(null);
+  const fullTranscriptRef = useRef('');
 
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -18,11 +19,25 @@ function Transcription() {
     recognition.interimResults = false;
 
     recognition.onresult = (event) => {
-      const lastResult = event.results[event.results.length - 1];
-      const text = lastResult[0].transcript;
-      setCapturedText((prevText) =>
-        prevText.endsWith(text.trim()) ? prevText : prevText + ' ' + text.trim()
-      );
+      const transcript = event.results[event.results.length - 1][0].transcript.trim();
+
+      const prevWords = fullTranscriptRef.current.trim().split(/\s+/);
+      const newWords = transcript.split(/\s+/);
+
+      // Tenta detectar a quantidade de palavras repetidas no final
+      let overlap = 0;
+      const maxCheck = Math.min(prevWords.length, newWords.length);
+      for (let i = 1; i <= maxCheck; i++) {
+        const endSlice = prevWords.slice(-i).join(' ');
+        const startSlice = newWords.slice(0, i).join(' ');
+        if (endSlice === startSlice) {
+          overlap = i;
+        }
+      }
+
+      const uniquePart = newWords.slice(overlap).join(' ');
+      fullTranscriptRef.current = (fullTranscriptRef.current + ' ' + uniquePart).trim();
+      setCapturedText(fullTranscriptRef.current);
     };
 
     recognition.onerror = (event) => {
@@ -42,6 +57,8 @@ function Transcription() {
 
   const handleStart = () => {
     if (recognitionRef.current && !listening) {
+      fullTranscriptRef.current = ''; // limpa antes de iniciar nova sessão
+      setCapturedText('');
       recognitionRef.current.start();
       setListening(true);
     }
@@ -70,30 +87,25 @@ function Transcription() {
           border: '1px solid #ccc',
           marginTop: '10px',
           minHeight: '100px',
-          fontSize: '18px'
+          fontSize: '18px',
         }}
       >
         {capturedText}
       </div>
+
+      {/* Avatar VLibras centralizado */}
+      <div
+        id="vlibras"
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%) scale(1.2)',
+          zIndex: 9999,
+        }}
+      ></div>
     </div>
   );
 }
 
 export default Transcription;
-setCapturedText((prevText) => {
-  const updatedText = prevText.endsWith(text.trim())
-    ? prevText
-    : prevText + ' ' + text.trim();
-
-  // Força o VLibras a reprocessar o texto
-  setTimeout(() => {
-    const container = document.getElementById('conteudo-vlibras');
-    if (container) {
-      const temp = container.innerHTML;
-      container.innerHTML = '';
-      container.innerHTML = temp;
-    }
-  }, 300);
-
-  return updatedText;
-});
